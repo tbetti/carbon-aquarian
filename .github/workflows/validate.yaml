@@ -1,0 +1,14 @@
+name: Pull Request validation
+
+on: [pull_request]
+
+
+jobs:
+  carbon-aquarian-contracts-ci:
+    name: Run carbon-aquarian-contracts validation
+    uses: ./.github/workflows/carbon-aquarian-contracts-ci.yaml
+
+  carbon-aquarian-frontend-ci:
+    name: Run carbon-aquarian-frontend validation
+    uses: ./.github/workflows/carbon-aquarian-frontend-ci.yaml
+

@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.vscode/**'
+      - '.idea/**'
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  carbon-aquarian-contracts-validate:
+    name: Run carbon-aquarian-contracts release
+    secrets: inherit
+    uses: ./.github/workflows/carbon-aquarian-contracts-ci.yaml
+
+  carbon-aquarian-contracts-release:
+    name: Run carbon-aquarian-contracts release
+    secrets: inherit
+    uses: ./.github/workflows/carbon-aquarian-contracts-cd.yaml
+    needs: carbon-aquarian-contracts-validate
+
+  carbon-aquarian-frontend-validate:
+    name: Run carbon-aquarian-frontend release
+    secrets: inherit
+    uses: ./.github/workflows/carbon-aquarian-frontend-ci.yaml
+
+  carbon-aquarian-frontend-release:
+    name: Run carbon-aquarian-frontend release
+    secrets: inherit
+    uses: ./.github/workflows/carbon-aquarian-frontend-cd.yaml
+    needs: carbon-aquarian-frontend-validate
