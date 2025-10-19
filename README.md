@@ -187,7 +187,7 @@ Access app at **http://localhost:3000**
 ## 🧑‍💻 Team
 - **Mahnoor Bilal** — Data Scientist
 - **Tiana Bettinson** - Front-End Software Engineer
-- ** Aldo Febrien** - Back-End Software Engineer
+- **Aldo Febrien** - Back-End Software Engineer
 
 ---
 
