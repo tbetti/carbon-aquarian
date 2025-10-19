@@ -148,7 +148,7 @@ Access app at **http://localhost:3000**
 ---
 
 ## 🎥 Demo Video
-🎬 **[Watch our walkthrough →](./projects/carbon-aquarian-frontend/public/demo.mp4)**
+🎬 **[Watch our walkthrough →](https://youtu.be/rMhMgo4_y90)**
 > In this demo, we show:
 > - Connecting Pera Wallet
 > - Logging a trip
