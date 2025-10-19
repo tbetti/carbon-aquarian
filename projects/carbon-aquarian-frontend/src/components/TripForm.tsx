@@ -1,97 +1,92 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Separator } from './ui/separator';
-import { Loader2, Car, Ruler, Train, Wallet, Check } from 'lucide-react';
+import { Car, Check, Loader2, Ruler, Train, Wallet } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { Button } from './ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
+import { Separator } from './ui/separator'
 
 interface TripFormProps {
-  walletAddress: string;
-  isConnected: boolean;
-  isSubmitting: boolean;
-  onSubmit: (data: {
-    vehicle_model_id: string;
-    distance_km: number;
-    actual_mode: string;
-    wallet_address: string;
-  }) => void;
+  walletAddress: string
+  isConnected: boolean
+  isSubmitting: boolean
+  onSubmit: (data: { vehicle_model_id: string; distance_km: number; actual_mode: string; wallet_address: string }) => void
 }
 
 export function TripForm({ walletAddress, isConnected, isSubmitting, onSubmit }: TripFormProps) {
-  const [vehicleModelId, setVehicleModelId] = useState('d5f5b9f8-3e3c-4b5d-bc64');
-  const [distanceKm, setDistanceKm] = useState('12.5');
-  const [actualMode, setActualMode] = useState('train');
-  const [manualWalletAddress, setManualWalletAddress] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [vehicleModelId, setVehicleModelId] = useState('d5f5b9f8-3e3c-4b5d-bc64')
+  const [distanceKm, setDistanceKm] = useState('12.5')
+  const [actualMode, setActualMode] = useState('train')
+  const [manualWalletAddress, setManualWalletAddress] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (isConnected) {
-      setManualWalletAddress(walletAddress);
+      setManualWalletAddress(walletAddress)
     }
-  }, [isConnected, walletAddress]);
+  }, [isConnected, walletAddress])
 
   const validate = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {}
 
     if (!vehicleModelId.trim()) {
-      newErrors.vehicleModelId = 'Please enter a valid model ID.';
+      newErrors.vehicleModelId = 'Please enter a valid model ID.'
     } else if (vehicleModelId.length < 10 || vehicleModelId.length > 64) {
-      newErrors.vehicleModelId = 'Please enter a valid model ID.';
+      newErrors.vehicleModelId = 'Please enter a valid model ID.'
     }
 
-    const distance = parseFloat(distanceKm);
+    const distance = parseFloat(distanceKm)
     if (!distanceKm.trim()) {
-      newErrors.distanceKm = 'Distance must be greater than zero.';
+      newErrors.distanceKm = 'Distance must be greater than zero.'
     } else if (isNaN(distance) || distance <= 0) {
-      newErrors.distanceKm = 'Distance must be greater than zero.';
+      newErrors.distanceKm = 'Distance must be greater than zero.'
     } else if (distance > 2000) {
-      newErrors.distanceKm = 'Distance must be greater than zero.';
+      newErrors.distanceKm = 'Distance must be greater than zero.'
     }
 
     if (!actualMode) {
-      newErrors.actualMode = 'Please select a transport mode.';
+      newErrors.actualMode = 'Please select a transport mode.'
     }
 
-    const addressToUse = isConnected ? walletAddress : manualWalletAddress;
+    const addressToUse = isConnected ? walletAddress : manualWalletAddress
     if (!addressToUse.trim()) {
-      newErrors.walletAddress = 'Please connect or enter a valid wallet address.';
+      newErrors.walletAddress = 'Please connect or enter a valid wallet address.'
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+    e.preventDefault()
+
     if (!validate()) {
-      return;
+      return
     }
 
-    const addressToUse = isConnected ? walletAddress : manualWalletAddress;
+    const addressToUse = isConnected ? walletAddress : manualWalletAddress
 
     await onSubmit({
       vehicle_model_id: vehicleModelId,
       distance_km: parseFloat(distanceKm),
       actual_mode: actualMode,
       wallet_address: addressToUse,
-    });
-    
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 2000);
-  };
+    })
 
-  const isFormValid = 
-    vehicleModelId.trim().length >= 10 && 
+    setSubmitted(true)
+    setTimeout(() => setSubmitted(false), 2000)
+  }
+
+  const isFormValid =
+    vehicleModelId.trim().length >= 10 &&
     vehicleModelId.trim().length <= 64 &&
-    parseFloat(distanceKm) > 0 && 
+    parseFloat(distanceKm) > 0 &&
     parseFloat(distanceKm) <= 2000 &&
     actualMode &&
-    (isConnected ? walletAddress : manualWalletAddress).trim();
+    (isConnected ? walletAddress : manualWalletAddress).trim()
 
   return (
     <Card className="shadow-[0_4px_16px_rgba(0,0,0,0.06)] rounded-2xl border-[#E0E0E0]">
@@ -116,12 +111,8 @@ export function TripForm({ walletAddress, isConnected, isSubmitting, onSubmit }:
               onChange={(e) => setVehicleModelId(e.target.value)}
               className={`rounded-2xl border-[#E0E0E0] ${errors.vehicleModelId ? 'border-[#E5484D]' : ''}`}
             />
-            <p className="text-sm text-[#667085]">
-              From Carbon Interface vehicles API.
-            </p>
-            {errors.vehicleModelId && (
-              <p className="text-sm text-[#E5484D]">{errors.vehicleModelId}</p>
-            )}
+            <p className="text-sm text-[#667085]">From Carbon Interface vehicles API.</p>
+            {errors.vehicleModelId && <p className="text-sm text-[#E5484D]">{errors.vehicleModelId}</p>}
           </div>
 
           <div className="space-y-2">
@@ -138,9 +129,7 @@ export function TripForm({ walletAddress, isConnected, isSubmitting, onSubmit }:
               onChange={(e) => setDistanceKm(e.target.value)}
               className={`rounded-2xl border-[#E0E0E0] ${errors.distanceKm ? 'border-[#E5484D]' : ''}`}
             />
-            {errors.distanceKm && (
-              <p className="text-sm text-[#E5484D]">{errors.distanceKm}</p>
-            )}
+            {errors.distanceKm && <p className="text-sm text-[#E5484D]">{errors.distanceKm}</p>}
           </div>
 
           <div className="space-y-2">
@@ -160,9 +149,7 @@ export function TripForm({ walletAddress, isConnected, isSubmitting, onSubmit }:
                 <SelectItem value="london_underground">London Underground</SelectItem>
               </SelectContent>
             </Select>
-            {errors.actualMode && (
-              <p className="text-sm text-[#E5484D]">{errors.actualMode}</p>
-            )}
+            {errors.actualMode && <p className="text-sm text-[#E5484D]">{errors.actualMode}</p>}
           </div>
 
           <div className="space-y-2">
@@ -178,9 +165,7 @@ export function TripForm({ walletAddress, isConnected, isSubmitting, onSubmit }:
               readOnly={isConnected}
               className={`rounded-2xl border-[#E0E0E0] ${errors.walletAddress ? 'border-[#E5484D]' : ''} ${isConnected ? 'bg-[#F6F8F7]' : ''}`}
             />
-            {errors.walletAddress && (
-              <p className="text-sm text-[#E5484D]">{errors.walletAddress}</p>
-            )}
+            {errors.walletAddress && <p className="text-sm text-[#E5484D]">{errors.walletAddress}</p>}
           </div>
 
           <div className="space-y-2 pt-3">
@@ -203,12 +188,10 @@ export function TripForm({ walletAddress, isConnected, isSubmitting, onSubmit }:
                 'Calculate & Reward'
               )}
             </Button>
-            <p className="text-sm text-center text-[#667085]">
-              CarbonPoints will appear in your Pera Wallet within a minute.
-            </p>
+            <p className="text-sm text-center text-[#667085]">CarbonPoints will appear in your Pera Wallet within a minute.</p>
           </div>
         </form>
       </CardContent>
     </Card>
-  );
+  )
 }
