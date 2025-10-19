@@ -1,17 +1,17 @@
-import { Button } from './ui/button';
+import { Button } from './ui/button'
 
 interface HeaderProps {
-  isConnected: boolean;
-  walletAddress: string;
-  onConnect: () => void;
-  onDisconnect: () => void;
+  isConnected: boolean
+  walletAddress: string
+  onConnect: () => void
+  onDisconnect: () => void
 }
 
 export function Header({ isConnected, walletAddress, onConnect, onDisconnect }: HeaderProps) {
   const truncateAddress = (addr: string) => {
-    if (addr.length < 12) return addr;
-    return `${addr.slice(0, 5)}...${addr.slice(-4)}`;
-  };
+    if (addr.length < 12) return addr
+    return `${addr.slice(0, 5)}...${addr.slice(-4)}`
+  }
 
   return (
     <header className="bg-white border-b border-[#E0E0E0]">
@@ -20,7 +20,7 @@ export function Header({ isConnected, walletAddress, onConnect, onDisconnect }: 
           <span className="text-2xl">🌿</span>
           <span className="text-[#1A1F2C]">Carbon Wallet</span>
         </div>
-        
+
         <div>
           {isConnected ? (
             <Button onClick={onDisconnect} variant="outline" className="gap-2">
@@ -35,5 +35,5 @@ export function Header({ isConnected, walletAddress, onConnect, onDisconnect }: 
         </div>
       </div>
     </header>
-  );
+  )
 }

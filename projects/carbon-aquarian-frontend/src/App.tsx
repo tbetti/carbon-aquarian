@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner@2.0.3'
 import { EmptyState } from './components/EmptyState'
 import { Footer } from './components/Footer'
@@ -7,6 +8,7 @@ import { Hero } from './components/Hero'
 import { ResultCard } from './components/ResultCard'
 import { TripForm } from './components/TripForm'
 import { Toaster } from './components/ui/sonner'
+import { setIsConnected, setWalletAddress, resetConnection } from './slices/connectionSlice'
 
 export interface TripResult {
   carbon_saved_kg: number
@@ -15,22 +17,21 @@ export interface TripResult {
 }
 
 export default function App() {
-  const [walletAddress, setWalletAddress] = useState<string>('')
-  const [isConnected, setIsConnected] = useState(false)
+  const dispatch = useDispatch<AppDispatch>()
+  const { walletAddress, isConnected } = useSelector((s: RootState) => s.connection)
   const [tripResult, setTripResult] = useState<TripResult | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleConnect = () => {
     // Mock wallet connection
     const mockAddress = 'BDKMGABCDEFGHIJKLMNOPQRSTUVWXYZ234567ABCDEFGHIXW3Q'
-    setWalletAddress(mockAddress)
-    setIsConnected(true)
+    dispatch(setWalletAddress(mockAddress))
+    dispatch(setIsConnected(true))
     toast.success('Wallet connected successfully!')
   }
 
   const handleDisconnect = () => {
-    setWalletAddress('')
-    setIsConnected(false)
+    dispatch(resetConnection())
     setTripResult(null)
   }
 
