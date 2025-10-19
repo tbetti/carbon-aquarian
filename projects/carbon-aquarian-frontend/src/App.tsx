@@ -9,12 +9,9 @@ import { ResultCard } from './components/ResultCard'
 import { TripForm } from './components/TripForm'
 import { Toaster } from './components/ui/sonner'
 import { setIsConnected, setWalletAddress, resetConnection } from './slices/connectionSlice'
-
-export interface TripResult {
-  carbon_saved_kg: number
-  carbon_points: number
-  txid: string
-}
+import { submitTrip } from './slices/tripSlice'
+import type { AppDispatch, RootState } from './app/store'
+import type { TripResult } from './api/carbonApi'
 
 export default function App() {
   const dispatch = useDispatch<AppDispatch>()
@@ -37,21 +34,12 @@ export default function App() {
 
   const handleSubmitTrip = async (data: { vehicle_model_id: string; distance_km: number; actual_mode: string; wallet_address: string }) => {
     setIsSubmitting(true)
-
     try {
-      // Mock API call delay
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
-      // Use example data from specifications
-      const result: TripResult = {
-        carbon_saved_kg: 4.25,
-        carbon_points: 4,
-        txid: 'Q7HZ3K4G9YF0V7QH7L3W3D5A2X9MOCKEXAMPLETRANSACTIONID',
-      }
-
+      // dispatch thunk and unwrap the result
+      const result = await dispatch(submitTrip(data)).unwrap()
       setTripResult(result)
       toast.success('CarbonPoints issued successfully!')
-    } catch (error) {
+    } catch (err) {
       toast.error("We couldn't calculate your trip. Check Vehicle model ID and try again.")
     } finally {
       setIsSubmitting(false)
@@ -60,7 +48,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F6F8F7] flex flex-col">
-      <Header isConnected={isConnected} walletAddress={walletAddress} onConnect={handleConnect} onDisconnect={handleDisconnect} />
+      <Header walletAddress={walletAddress} onConnect={handleConnect} onDisconnect={handleDisconnect} />
 
       <main className="max-w-[700px] w-full mx-auto px-6 md:px-8 flex-1 py-12">
         <Hero />

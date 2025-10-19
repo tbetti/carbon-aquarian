@@ -1,13 +1,14 @@
+import { useSelector } from 'react-redux'
 import { Button } from './ui/button'
 
 interface HeaderProps {
-  isConnected: boolean
   walletAddress: string
   onConnect: () => void
   onDisconnect: () => void
 }
 
-export function Header({ isConnected, walletAddress, onConnect, onDisconnect }: HeaderProps) {
+export function Header({ walletAddress, onConnect, onDisconnect }: HeaderProps) {
+  const { isConnected } = useSelector((s: RootState) => s.connection)
   const truncateAddress = (addr: string) => {
     if (addr.length < 12) return addr
     return `${addr.slice(0, 5)}...${addr.slice(-4)}`
