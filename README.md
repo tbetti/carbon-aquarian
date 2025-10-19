@@ -58,7 +58,7 @@ Handles:
 
 | Layer | Tools / Frameworks |
 |--------|--------------------|
-| Blockchain | **Algorand**, **Algopy (Beaker)** |
+| Blockchain | **Algorand**** |
 | Backend | **FastAPI**, **Python 3.14**, **Algorand SDK**, **Carbon Interface API** |
 | Frontend | **React**, **Vite**, **Pera Wallet SDK** |
 | Design | **Figma** (UI + Flow Mockups) |
@@ -81,7 +81,7 @@ Every 1 kg CO₂ saved ≈ **0.91 CarbonPoints**.
 
 ```
 Carbon_Wallet/
-├── backend/
+├── carbon-aquarian-contracts/
 │   ├── carbon_engine.py        # Carbon savings calculator
 │   ├── algorand_utils.py       # Token creation + transfer (Algorand SDK)
 │   ├── main.py                 # FastAPI app (endpoint: /calculate_and_reward)
@@ -91,19 +91,24 @@ Carbon_Wallet/
 │   └── carbon_wallet/
 │       └── contract.py         # Algopy smart contract (ARC4)
 │
-├── frontend/
+├── carbon-aquarian-frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── WalletConnect.js
-│   │   │   ├── TripForm.js
-│   │   │   └── ResultCard.js
+│   │   │   ├── EmptyState.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── Header.tsx
+|   |   |   ├── Hero.tsx
+|   |   |   ├── ResultCard.tsx
+│   │   |   └── TripForm.tsx
+│   │   ├── contracts/
+│   │   |   └── Backend.ts
 │   │   ├── api.js
-│   │   ├── App.js
-│   │   └── index.js
+│   │   ├── App.tsx
+│   │   └── main.tsx
 │   └── package.json
 │
 ├── README.md
-├── poetry.toml
+├── algokit.toml
 └── pyproject.toml
 ```
 
