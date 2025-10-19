@@ -2,7 +2,6 @@ import { Bike } from 'lucide-react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../app/store'
 import { setIsConnected as connectAction } from '../slices/connectionSlice'
-import { addTrip } from '../slices/tripSlice'
 
 export function EmptyState() {
   const isConnected = useSelector((s: RootState) => s.connection.isConnected)
@@ -12,9 +11,10 @@ export function EmptyState() {
     dispatch(connectAction(!isConnected))
   }
 
+  // FIX PLEASE! add call to api here
   function handleSubmitTrip() {
     const trip = { id: 'kju8', distanceKm: 3.2, date: new Date().toISOString() }
-    dispatch(addTrip(trip))
+    // dispatch(addTrip(trip))
   }
 
   return (

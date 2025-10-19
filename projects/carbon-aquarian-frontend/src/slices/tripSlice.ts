@@ -1,24 +1,30 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { submitTripApi, SubmitTripRequest, TripResult } from '../api/carbonApi'
 
-export type Trip = { id: string; distanceKm: number; date: string }
-
 interface TripState {
-  trips: Trip[]
+  vehicleModelId: string
+  distanceKm: number
+  actualMode: string // should use actual options instead
+  manualWalletAddress: string
+  submitted: boolean
   submitStatus: 'idle' | 'loading' | 'succeeded' | 'failed'
   submitError: string | null
   lastResult: TripResult | null
 }
 
 const initialState: TripState = {
-  trips: [],
+  vehicleModelId: 'd5f5b9f8-3e3c-4b5d-bc64',
+  distanceKm: 12.5,
+  actualMode: 'train',
+  manualWalletAddress: '',
+  submitted: false,
   submitStatus: 'idle',
   submitError: null,
   lastResult: null,
 }
 
 export const submitTrip = createAsyncThunk<TripResult, SubmitTripRequest, { rejectValue: string }>(
-  'trips/submitTrip',
+  'trips/calculate_and_reward',
   async (data, { rejectWithValue }) => {
     try {
       const result = await submitTripApi(data)
@@ -34,8 +40,20 @@ const tripSlice = createSlice({
   name: 'trips',
   initialState,
   reducers: {
-    addTrip(state, action: PayloadAction<Trip>) {
-      state.trips.push(action.payload)
+    setVehicleModelId(state, action: PayloadAction<string>) {
+      state.vehicleModelId = action.payload
+    },
+    setDistanceKm(state, action: PayloadAction<number>) {
+      state.distanceKm = action.payload
+    },
+    setActualMode(state, action: PayloadAction<string>) {
+      state.actualMode = action.payload
+    },
+    setManualWalletAddress(state, action: PayloadAction<string>) {
+      state.actualMode = action.payload
+    },
+    setSubmitted(state, action: PayloadAction<boolean>) {
+      state.submitted = action.payload
     },
     clearLastResult(state) {
       state.lastResult = null
@@ -58,5 +76,5 @@ const tripSlice = createSlice({
   },
 })
 
-export const { addTrip, clearLastResult } = tripSlice.actions
+export const { setVehicleModelId, setDistanceKm, setActualMode, setManualWalletAddress, setSubmitted, clearLastResult } = tripSlice.actions
 export default tripSlice.reducer

@@ -1,6 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { addTrip } from './tripSlice'
-
 type ResultState = {
   points: number
   isVisible: boolean
@@ -30,12 +28,12 @@ const resultsSlice = createSlice({
       return initialState
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(addTrip, (state, action) => {
-      const distance = action.payload.distanceKm
-      state.points += Math.round(distance * 10)
-    })
-  },
+  // extraReducers: (builder) => {
+  //   builder.addCase(addTrip, (state, action) => {
+  //     const distance = action.payload.distanceKm
+  //     state.points += Math.round(distance * 10)
+  //   })
+  // },
 })
 
 export const { setPoints, setIsVisible, setShowConfetti, resetResults } = resultsSlice.actions
