@@ -148,7 +148,7 @@ Access app at **http://localhost:3000**
 ---
 
 ## 🎥 Demo Video
-🎬 **[Watch our 3-minute walkthrough →](https://youtu.be/your-demo-video-link)**
+🎬 **[Watch our walkthrough →](./carbon-aquarian-frontend/public/demo.mp4)**
 > In this demo, we show:
 > - Connecting Pera Wallet
 > - Logging a trip
@@ -160,7 +160,7 @@ Access app at **http://localhost:3000**
 
 ## 🖼️ UI Preview
 
-![Carbon Wallet UI Screenshot](./frontend/public/ui-screenshot.png)
+![Carbon Wallet UI Screenshot](./carbon-aquarian-frontend/public/ui-screenshot.png)
 
 > The user logs a trip, clicks “Calculate & Reward,” and instantly sees their CarbonPoints earned — verified on Algorand TestNet.
 
