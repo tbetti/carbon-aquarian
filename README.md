@@ -1,55 +1,194 @@
-# carbon-aquarian
+# 🌿 Carbon Wallet — Earn CarbonPoints for Low-Carbon Travel
 
-This starter full stack project has been generated using AlgoKit. See below for default getting started instructions.
+**Carbon Wallet** is a decentralized app built on **Algorand** that rewards users for choosing sustainable modes of transport.
+When users log their trips, the system calculates how much CO₂ they saved versus driving — and instantly issues **CarbonPoints (CPT)** to their **Pera Wallet** as on-chain tokens.
 
-## Setup
+---
 
-### Initial setup
-1. Clone this repository to your local machine.
-2. Ensure [Docker](https://www.docker.com/) is installed and operational. Then, install `AlgoKit` following this [guide](https://github.com/algorandfoundation/algokit-cli#install).
-3. Run `algokit project bootstrap all` in the project directory. This command sets up your environment by installing necessary dependencies, setting up a Python virtual environment, and preparing your `.env` file.
-4. In the case of a smart contract project, execute `algokit generate env-file -a target_network localnet` from the `carbon-aquarian-contracts` directory to create a `.env.localnet` file with default configuration for `localnet`.
-5. To build your project, execute `algokit project run build`. This compiles your project and prepares it for running.
-6. For project-specific instructions, refer to the READMEs of the child projects:
-   - Smart Contracts: [carbon-aquarian-contracts](projects/carbon-aquarian-contracts/README.md)
-   - Frontend Application: [carbon-aquarian-frontend](projects/carbon-aquarian-frontend/README.md)
+## 🚀 Problem
+Today, sustainability is hard to measure and harder to reward.
+People bike, take trains, or use public transport — but rarely get tangible credit for their reduced carbon footprint.
+We wanted to make **climate-friendly actions measurable, visible, and rewarding**.
 
-> This project is structured as a monorepo, refer to the [documentation](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/project/run.md) to learn more about custom command orchestration via `algokit project run`.
+---
 
-### Subsequently
+## 🌍 Our Solution
+**Carbon Wallet** uses verified emission data (via the [Carbon Interface API](https://www.carboninterface.com)) and the **Algorand blockchain** to:
+1. Calculate CO₂ savings when a user chooses a low-carbon travel mode.
+2. Convert saved CO₂ into **CarbonPoints (CPT)** at Fairtrade carbon credit rates.
+3. Issue these tokens directly to the user’s wallet on Algorand.
 
-1. If you update to the latest source code and there are new dependencies, you will need to run `algokit project bootstrap all` again.
-2. Follow step 3 above.
+---
 
-### Continuous Integration / Continuous Deployment (CI/CD)
+## 🧩 How It Works
 
-This project uses [GitHub Actions](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) to define CI/CD workflows, which are located in the [`.github/workflows`](./.github/workflows) folder. You can configure these actions to suit your project's needs, including CI checks, audits, linting, type checking, testing, and deployments to TestNet.
+### 1️⃣ User Flow
+1. User connects their **Pera Wallet** on the front-end (React app).
+2. They log a trip — specifying:
+   - Vehicle model ID (from Carbon Interface API)
+   - Distance (km)
+   - Mode of transport (train, bus, bike, etc.)
+3. The backend (FastAPI + Python) calls the **Carbon Interface API** to compute baseline car emissions and saved CO₂.
+4. Based on the CO₂ saved, the system mints **CarbonPoints** and sends them via the Algorand SDK to the user’s wallet.
+5. The frontend displays the points earned and a transaction link on **AlgoExplorer** for verification.
 
-For pushes to `main` branch, after the above checks pass, the following deployment actions are performed:
-  - The smart contract(s) are deployed to TestNet using [AlgoNode](https://algonode.io).
-  - The frontend application is deployed to a provider of your choice (Netlify, Vercel, etc.). See [frontend README](frontend/README.md) for more information.
+### 2️⃣ Smart Contract Logic (Algopy)
+- Written in Algorand Python (Algopy).
+- Defines a simple **ARC4 contract** (`CarbonWallet`) with a method `issue_points(user, points)` that records issuance events.
+- The smart contract ensures transparency by registering every “reward” action on-chain.
 
-> Please note deployment of smart contracts is done via `algokit deploy` command which can be invoked both via CI as seen on this project, or locally. For more information on how to use `algokit deploy` please see [AlgoKit documentation](https://github.com/algorandfoundation/algokit-cli/blob/main/docs/features/deploy.md).
+### 3️⃣ Backend (FastAPI + Algorand SDK)
+Handles:
+- CO₂ computation
+- Token creation (ASA setup)
+- Token transfer to user wallet
+- REST API endpoint `/calculate_and_reward`
 
-## Tools
+### 4️⃣ Frontend (React)
+- Connects with **Pera Wallet** using `@perawallet/connect`
+- Form fields: Vehicle model ID, Distance (km), Mode of transport, Wallet address
+- Displays result card with:
+  - ✅ Carbon saved (kg CO₂)
+  - 🏅 CarbonPoints earned
+  - 🔗 Transaction link to AlgoExplorer
 
-This project makes use of Python and React to build Algorand smart contracts and to provide a base project configuration to develop frontends for your Algorand dApps and interactions with smart contracts. The following tools are in use:
+---
 
-- Algorand, AlgoKit, and AlgoKit Utils
-- Python dependencies including Poetry, Black, Ruff or Flake8, mypy, pytest, and pip-audit
-- React and related dependencies including AlgoKit Utils, Tailwind CSS, daisyUI, use-wallet, npm, jest, playwright, Prettier, ESLint, and Github Actions workflows for build validation
+## 🧱 Tech Stack
 
-### VS Code
+| Layer | Tools / Frameworks |
+|--------|--------------------|
+| Blockchain | **Algorand**** |
+| Backend | **FastAPI**, **Python 3.14**, **Algorand SDK**, **Carbon Interface API** |
+| Frontend | **React**, **Vite**, **Pera Wallet SDK** |
+| Design | **Figma** (UI + Flow Mockups) |
+| Hosting | **Local / TestNet** for demo |
 
-It has also been configured to have a productive dev experience out of the box in [VS Code](https://code.visualstudio.com/), see the [backend .vscode](./backend/.vscode) and [frontend .vscode](./frontend/.vscode) folders for more details.
+---
 
-## Integrating with smart contracts and application clients
+## 🧮 Carbon Calculation Logic
 
-Refer to the [carbon-aquarian-contracts](projects/carbon-aquarian-contracts/README.md) folder for overview of working with smart contracts, [projects/carbon-aquarian-frontend](projects/carbon-aquarian-frontend/README.md) for overview of the React project and the [projects/carbon-aquarian-frontend/contracts](projects/carbon-aquarian-frontend/src/contracts/README.md) folder for README on adding new smart contracts from backend as application clients on your frontend. The templates provided in these folders will help you get started.
-When you compile and generate smart contract artifacts, your frontend component will automatically generate typescript application clients from smart contract artifacts and move them to `frontend/src/contracts` folder, see [`generate:app-clients` in package.json](projects/carbon-aquarian-frontend/package.json). Afterwards, you are free to import and use them in your frontend application.
+Implemented in `backend/carbon_engine.py`
+```python
+carbon_points = round(carbon_saved_kg * 0.91)
+```
+The calculation uses DEFRA 2024 emission factors and Fairtrade carbon credit pricing (€9.10/tCO₂e).
+Every 1 kg CO₂ saved ≈ **0.91 CarbonPoints**.
 
-The frontend starter also provides an example of interactions with your BackendClient in [`AppCalls.tsx`](projects/carbon-aquarian-frontend/src/components/AppCalls.tsx) component by default.
+---
 
-## Next Steps
+## 🗂️ Repository Structure
 
-You can take this project and customize it to build your own decentralized applications on Algorand. Make sure to understand how to use AlgoKit and how to write smart contracts for Algorand before you start.
+```
+Carbon_Wallet/
+├── carbon-aquarian-contracts/
+│   ├── carbon_engine.py        # Carbon savings calculator
+│   ├── algorand_utils.py       # Token creation + transfer (Algorand SDK)
+│   ├── main.py                 # FastAPI app (endpoint: /calculate_and_reward)
+│   └── .env                    # Private keys, wallet address, asset ID
+│
+├── smart_contracts/
+│   └── carbon_wallet/
+│       └── contract.py         # Algopy smart contract (ARC4)
+│
+├── carbon-aquarian-frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── EmptyState.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── Header.tsx
+|   |   |   ├── Hero.tsx
+|   |   |   ├── ResultCard.tsx
+│   │   |   └── TripForm.tsx
+│   │   ├── contracts/
+│   │   |   └── Backend.ts
+│   │   ├── api.js
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   └── package.json
+│
+├── README.md
+├── algokit.toml
+└── pyproject.toml
+```
+
+---
+## 💻 Setup Instructions
+
+### 1️⃣ Clone the repo and start Docker
+```bash
+git clone https://github.com/tbetti/carbon-wallet.git
+cd carbon-wallet
+```
+
+### 2️⃣ Run in the project directoryto set up your environment by installing necessary dependencies, setting up a Python virtual environment, and preparing your `.env` file.
+```bash
+algokit project bootstrap all
+```
+
+### 3️⃣ Backend/Smart contract setup
+```bash
+cd carbon-aquarian-contracts
+algokit sandbox start
+algokit localnet start
+```
+
+### 4️⃣ Frontend setup
+```bash
+cd carbon-aquarian-frontend
+algokit project bootstrap all
+algokit project run build
+npm install
+npm run build
+npm run dev
+```
+
+Access app at **http://localhost:3000**
+
+---
+
+## 🎥 Demo Video
+🎬 **[Watch our 3-minute walkthrough →](https://youtu.be/your-demo-video-link)**
+> In this demo, we show:
+> - Connecting Pera Wallet
+> - Logging a trip
+> - Carbon savings calculation
+> - Blockchain token issuance (CarbonPoints)
+> - Transaction verification on AlgoExplorer
+
+---
+
+## 🖼️ UI Preview
+
+![Carbon Wallet UI Screenshot](./frontend/public/ui-screenshot.png)
+
+> The user logs a trip, clicks “Calculate & Reward,” and instantly sees their CarbonPoints earned — verified on Algorand TestNet.
+
+---
+
+## 🔐 Smart Contract Overview
+- Contract Name: `CarbonWallet`
+- Type: `ARC4Contract`
+- Deployed to: Algorand TestNet
+- Function: `issue_points(user, points)`
+- Output: emits confirmation string + logs transaction hash
+- Security: all transactions signed by admin key; users cannot self-mint tokens.
+
+---
+
+## 🌱 Future Scope
+- CarbonPoints redemption (marketplace integration)
+- Exhange between companies and net positive carbon footprint entities like farmers
+- NFT-based carbon certificates for large CO₂ offsets
+- On-chain transparency dashboard for sustainability data
+
+---
+
+## 🧑‍💻 Team
+- **Mahnoor Bilal** — Data Scientist
+- **Tiana Bettinson** - Front-End Software Engineer
+- ** Aldo Febrien** - Back-End Software Engineer
+
+---
+
+## 🏆 Hackathon Submission Notes
