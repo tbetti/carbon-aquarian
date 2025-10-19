@@ -19,7 +19,7 @@ export type TripResult = {
 }
 
 export async function submitTripApi(data: SubmitTripRequest): Promise<TripResult> {
-  // const res = await api.post<TripResult>('/submit-trip', data)
+  // const res = await api.post<TripResult>('/calculate_and_reward', data)
   const res = {
     data: {
       carbon_saved_kg: 4.25,
