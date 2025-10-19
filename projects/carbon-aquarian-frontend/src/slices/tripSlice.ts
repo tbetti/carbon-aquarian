@@ -50,7 +50,7 @@ const tripSlice = createSlice({
       state.actualMode = action.payload
     },
     setManualWalletAddress(state, action: PayloadAction<string>) {
-      state.actualMode = action.payload
+      state.manualWalletAddress = action.payload
     },
     setSubmitted(state, action: PayloadAction<boolean>) {
       state.submitted = action.payload

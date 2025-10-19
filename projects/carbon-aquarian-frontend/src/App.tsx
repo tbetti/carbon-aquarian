@@ -12,6 +12,7 @@ import { setIsConnected, setWalletAddress, resetConnection } from './slices/conn
 import { submitTrip } from './slices/tripSlice'
 import type { AppDispatch, RootState } from './app/store'
 import type { TripResult } from './api/carbonApi'
+import { connectPeraApi } from './api/peraApi'
 
 export default function App() {
   const dispatch = useDispatch<AppDispatch>()
@@ -19,12 +20,24 @@ export default function App() {
   const [tripResult, setTripResult] = useState<TripResult | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleConnect = () => {
+  const handleConnect = async () => {
     // Mock wallet connection
     const mockAddress = 'BDKMGABCDEFGHIJKLMNOPQRSTUVWXYZ234567ABCDEFGHIXW3Q'
     dispatch(setWalletAddress(mockAddress))
-    dispatch(setIsConnected(true))
-    toast.success('Wallet connected successfully!')
+
+    try {
+      // call the API wrapper directly — it returns data on 200 or mock on 405,
+      // and throws for any other error. Only mark connected on successful return.
+      await connectPeraApi()
+      dispatch(setIsConnected(true))
+      toast.success('Wallet connected successfully!')
+    } catch (err) {
+      // do not set connected for non-405 errors
+      dispatch(setIsConnected(false))
+      toast.error('Failed to connect to Pera API')
+      // optional: log for debugging
+      // console.error('connectPeraApi error', err)
+    }
   }
 
   const handleDisconnect = () => {
