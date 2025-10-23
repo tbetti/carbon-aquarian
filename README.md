@@ -148,7 +148,7 @@ Access app at **http://localhost:3000**
 ---
 
 ## 🎥 Demo Video
-🎬 **[Watch our walkthrough →](https://youtu.be/rMhMgo4_y90)**
+🎬 **[Watch our walkthrough →](https://youtu.be/13hkrtAd2fk)**
 > In this demo, we show:
 > - Connecting Pera Wallet
 > - Logging a trip
